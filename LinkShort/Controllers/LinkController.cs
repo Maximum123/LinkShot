@@ -15,16 +15,18 @@ namespace LinkShort.Controllers
     public class LinkController : ApiController
     {
         // GET api/<controller>
-        public HttpResponseMessage Get(string link)
+        public void Get(string link)
         {
-            var screenService = new ScreenShortService();
-            var screenSort = screenService.GetScreenShortByUrl(link);
-            Stream stream = new MemoryStream(screenSort);
-            HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
-            result.Content = new StreamContent(stream);
-            result.Content.Headers.ContentType =
-                new MediaTypeHeaderValue("application/octet-stream");
-            return result;
+            var queue = new QueueService();
+            queue.AddToQueue(link);
+            //var screenService = new ScreenShortService();
+            //var screenSort = screenService.GetScreenShortByUrl(link);
+            //Stream stream = new MemoryStream(screenSort);
+            //HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
+            //result.Content = new StreamContent(stream);
+            //result.Content.Headers.ContentType =
+            //    new MediaTypeHeaderValue("application/octet-stream");
+            //return result;
         }
 
         // GET api/<controller>/5
