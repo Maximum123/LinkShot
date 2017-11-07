@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using RabbitMQ.Client;
 
@@ -8,24 +9,25 @@ namespace LinkShort.Services
 {
     public class QueueService
     {
-        private  IModel model;
-        public QueueService()
+        private  static  IModel model;
+        static  QueueService()
         {
             ConnectionFactory connectionFactory = new ConnectionFactory();
             connectionFactory.HostName = "crimcol.myqnapcloud.com";
-            connectionFactory.UserName = "guest";
-            connectionFactory.Password = "guest";
-            connectionFactory.Port = 15672;
-
-            IConnection connection = connectionFactory.CreateConnection();
+            //connectionFactory.UserName = "guest";
+            //connectionFactory.Password = "guest";
+            IConnection connection = connectionFactory.CreateConnection(); 
             model = connection.CreateModel();
+            model.QueueDeclare("linkShots", true, true, false, null);
         }
 
         public void AddToQueue(string link)
         {
-            var linkToSite = new Dictionary<string, object>();
-            linkToSite.Add(link, null);
-            model.QueueDeclare("linkShots", true, true, true, linkToSite);
+            var body = Encoding.UTF8.GetBytes(link);
+            model.BasicPublish(exchange: "",
+                routingKey: "linkShots",
+                basicProperties: null,
+                body: body);
         }
     }
 }

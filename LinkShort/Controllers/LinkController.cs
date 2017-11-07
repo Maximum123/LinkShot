@@ -17,7 +17,7 @@ namespace LinkShort.Controllers
         // GET api/<controller>
         public void Get(string link)
         {
-            var queue = new QueueService();
+            var queue = new QueueService(); 
             queue.AddToQueue(link);
             //var screenService = new ScreenShortService();
             //var screenSort = screenService.GetScreenShortByUrl(link);
