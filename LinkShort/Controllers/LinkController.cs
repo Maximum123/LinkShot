@@ -7,18 +7,21 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Mvc;
 
 namespace LinkShort.Controllers
 {
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class LinkController : ApiController
     {
         // GET api/<controller>
-        public void Get(string link)
+        public object Get(string link)
         {
             var queue = new QueueService(); 
-            queue.AddToQueue(link);
+            var linkToShot = queue.AddToQueue(link);
             //var screenService = new ScreenShortService();
             //var screenSort = screenService.GetScreenShortByUrl(link);
             //Stream stream = new MemoryStream(screenSort);
@@ -27,6 +30,11 @@ namespace LinkShort.Controllers
             //result.Content.Headers.ContentType =
             //    new MediaTypeHeaderValue("application/octet-stream");
             //return result;
+            return new  
+            {
+                Url = link,
+                ImageUrl = linkToShot
+            };
         }
 
         // GET api/<controller>/5

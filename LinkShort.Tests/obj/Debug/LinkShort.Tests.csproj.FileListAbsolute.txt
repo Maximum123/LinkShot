@@ -149,3 +149,13 @@ C:\Users\maksim\Documents\Visual Studio 2017\LinkShot\LinkShot\LinkShort.Tests\o
 C:\Users\maksim\Documents\Visual Studio 2017\LinkShot\LinkShot\LinkShort.Tests\obj\Debug\LinkShort.Tests.dll
 C:\Users\maksim\Documents\Visual Studio 2017\LinkShot\LinkShot\LinkShort.Tests\obj\Debug\LinkShort.Tests.pdb
 C:\Users\maksim\Documents\Visual Studio 2017\LinkShot\LinkShot\LinkShort.Tests\bin\Debug\CloudinaryDotNet.dll
+C:\Users\maksim\Documents\Visual Studio 2017\LinkShot\LinkShot\LinkShort.Tests\bin\Debug\MongoDB.Driver.dll
+C:\Users\maksim\Documents\Visual Studio 2017\LinkShot\LinkShot\LinkShort.Tests\bin\Debug\MongoDB.Bson.dll
+C:\Users\maksim\Documents\Visual Studio 2017\LinkShot\LinkShot\LinkShort.Tests\bin\Debug\MongoDB.Driver.Core.dll
+C:\Users\maksim\Documents\Visual Studio 2017\LinkShot\LinkShot\LinkShort.Tests\bin\Debug\System.Runtime.InteropServices.RuntimeInformation.dll
+C:\Users\maksim\Documents\Visual Studio 2017\LinkShot\LinkShot\LinkShort.Tests\bin\Debug\MongoDB.Driver.xml
+C:\Users\maksim\Documents\Visual Studio 2017\LinkShot\LinkShot\LinkShort.Tests\bin\Debug\MongoDB.Bson.xml
+C:\Users\maksim\Documents\Visual Studio 2017\LinkShot\LinkShot\LinkShort.Tests\bin\Debug\MongoDB.Driver.Core.xml
+C:\Users\maksim\Documents\Visual Studio 2017\LinkShot\LinkShot\LinkShort.Tests\bin\Debug\System.Web.Http.Cors.dll
+C:\Users\maksim\Documents\Visual Studio 2017\LinkShot\LinkShot\LinkShort.Tests\bin\Debug\System.Web.Cors.dll
+C:\Users\maksim\Documents\Visual Studio 2017\LinkShot\LinkShot\LinkShort.Tests\bin\Debug\System.Web.Http.Cors.xml

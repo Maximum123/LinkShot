@@ -25,7 +25,7 @@ namespace LinkShort
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            DeclareToQueue();
+           // DeclareToQueue();
         }
 
         private void DeclareToQueue()
