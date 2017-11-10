@@ -9,7 +9,7 @@ namespace LinkShort
     {
         public static void Register(HttpConfiguration config)
         {
-            config.EnableCors();
+           // config.EnableCors();
             // Web API configuration and services
 
             // Web API routes

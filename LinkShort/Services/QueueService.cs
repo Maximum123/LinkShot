@@ -12,7 +12,7 @@ namespace LinkShort.Services
 {
     public class QueueService
     {
-        private static  IModel model;
+        private static IModel model;
         private static IMongoCollection<BsonDocument> _collection;
 
         static QueueService()
@@ -34,29 +34,42 @@ namespace LinkShort.Services
 
         public string AddToQueue(string link)
         {
-            //for (var i = 0; i < 100; i++)
+            var result = GetLinkToScreen(link);
+            if (!string.IsNullOrEmpty(result))
             {
-                var body = Encoding.UTF8.GetBytes(link);
-                IBasicProperties bp = model.CreateBasicProperties();
-                bp.DeliveryMode = 2;
-                model.BasicPublish(exchange: "",
-                    routingKey: "linkShots",
-                    basicProperties: bp,
-                    body: body);
-                for (var i = 0; i < 15; i++)
-                {
-                    Thread.Sleep(1000);
-                    var filter = Builders<BsonDocument>.Filter.Eq("Url", link);
-                    var document = _collection.Find(filter).FirstOrDefault();
-                    if (document != null)
-                    {
-                        return document["LinkToScreen"].AsString;
-                    }
-                 
-                }
-                return "Not Found";
+                return result;
             }
 
+            var body = Encoding.UTF8.GetBytes(link);
+            IBasicProperties bp = model.CreateBasicProperties();
+            bp.DeliveryMode = 2;
+
+            model.BasicPublish(exchange: "",
+                routingKey: "linkShots",
+                basicProperties: bp,
+                body: body);
+
+            for (var i = 0; i < 15; i++)
+            {
+                Thread.Sleep(1000);
+                result = GetLinkToScreen(link);
+                if (!string.IsNullOrEmpty(result))
+                {
+                    return result;
+                }
+            }
+            return "Not Found";
+        }
+
+        private static string GetLinkToScreen(string link)
+        {
+            var filter = Builders<BsonDocument>.Filter.Eq("Url", link);
+            var document = _collection.Find(filter).FirstOrDefault();
+            if (document != null)
+            {
+                return document["LinkToScreen"].AsString;
+            }
+            return string.Empty;
         }
 
         private static void MongoDBConnection()

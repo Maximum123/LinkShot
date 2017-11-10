@@ -14,7 +14,7 @@ using System.Web.Mvc;
 
 namespace LinkShort.Controllers
 {
-    [EnableCors(origins: "*", headers: "*", methods: "*")]
+   // [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class LinkController : ApiController
     {
         // GET api/<controller>
