@@ -22,11 +22,11 @@ namespace CapturesQueue
     {
         private static IMongoCollection<BsonDocument> _collection;
         private static ChromeDriver _chromDeriver;
-        
+      
         static void Main(string[] args)
         {
-            FreezerInit();
-            ChromeDriverInit();
+           // FreezerInit();
+          //  ChromeDriverInit();
             MongoDBConnection();
             Receive();
             //var factory = new ConnectionFactory() { HostName = "crimcol.myqnapcloud.com" };
@@ -84,7 +84,7 @@ namespace CapturesQueue
                 consumer.Received += (model, ea) =>
                 {
                    
-                    Task task = Task.Run(() =>
+                   Task task = Task.Run(() =>
                     {
                         semaphore.WaitOne();
                         var body = ea.Body;
@@ -100,7 +100,8 @@ namespace CapturesQueue
                         }
                         channel.BasicAck(ea.DeliveryTag, false);
                         semaphore.Release();
-                    });
+                    }
+                    );
                     //task.Wait();
                    
                 };
@@ -123,9 +124,9 @@ namespace CapturesQueue
                 byte[] screenshotBytes = null;
                 try
                 {
-                    screenshotBytes = GetScreenShotSeleniumGCByUrl(message);
+                    screenshotBytes = GetScreenShotCasperJSByUrl(message);
                 }
-                catch
+                catch (Exception ex)
                 {
 
                 }
@@ -171,6 +172,22 @@ namespace CapturesQueue
             FreezerGlobal.Initialize();
         }
 
+
+        private static byte[] GetScreenShotCasperJSByUrl(string url)
+        {
+            CasperJsHelper.CasperJsHelper cjs = new CasperJsHelper.CasperJsHelper("casperjs-1.1.3");
+            var scriptPath =Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Scripts", "TakeScreenshot.js");
+            var tempFileName = Guid.NewGuid() +".png";
+            cjs.Run(AddCommasIfRequired(scriptPath), new string[] {$"--url={url}", $"--fileName={tempFileName}"});
+
+            var screenPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "casperjs-1.1.3",  "temp",
+                tempFileName);
+            var result = File.ReadAllBytes(screenPath);
+            File.Delete(screenPath);
+
+            return result;
+        }
+
         private static byte[] GetScreenShotSeleniumGCByUrl(string url)
         {
             _chromDeriver.Navigate().GoToUrl(url);
@@ -192,6 +209,11 @@ namespace CapturesQueue
             
 
             return screen;
+        }
+
+        private static string AddCommasIfRequired(string path)
+        {
+            return (path.Contains(" ")) ? "\"" + path + "\"" : path;
         }
     }
 }
