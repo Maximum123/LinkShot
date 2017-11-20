@@ -58,6 +58,7 @@ namespace CapturesQueue.Services
                                 var bytes = _casperJsService.GetScreenBytesByUrl(message);
                                 var linkToScreen = _сaptureService.UploadScreenShot(bytes);
                                 _repository.Create(message, linkToScreen);
+                                Console.WriteLine("Screenshot done.");
                             }
                             catch (Exception ex)
                             {
