@@ -43,11 +43,11 @@ namespace CapturesQueue.Services
                 //channel.ConfirmSelect();
 
                 var consumer = new EventingBasicConsumer(channel);
-                Semaphore semaphore = new Semaphore(5, 5);
+                Semaphore semaphore = new Semaphore(10, 10);
                 consumer.Received += (model, ea) =>
                 {
 
-                    //Task task = Task.Run(() =>
+                    Task task = Task.Run(() =>
                         {
                             semaphore.WaitOne();
                             var body = ea.Body;
@@ -67,8 +67,7 @@ namespace CapturesQueue.Services
                             channel.BasicAck(ea.DeliveryTag, false);
                             semaphore.Release();
                         }
-                   // );
-                    //task.Wait();
+                    );
 
                 };
                 channel.BasicConsume(queue: "linkShots",
