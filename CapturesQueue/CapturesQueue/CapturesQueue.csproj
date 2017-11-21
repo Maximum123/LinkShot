@@ -86,6 +86,8 @@
     <Compile Include="Services\CasperJsService.cs" />
     <Compile Include="Services\ICaptureService.cs" />
     <Compile Include="Services\IQueueService.cs" />
+    <Compile Include="Services\IScreenShotService.cs" />
+    <Compile Include="Services\PhantomJsCloudService.cs" />
     <Compile Include="Services\QueueService.cs" />
   </ItemGroup>
   <ItemGroup>

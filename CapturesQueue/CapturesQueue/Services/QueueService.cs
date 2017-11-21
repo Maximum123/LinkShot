@@ -17,15 +17,15 @@ namespace CapturesQueue.Services
         private readonly string _queueName;
 
         private readonly MongoRepository _repository;
-        private readonly CasperJsService _casperJsService;
+        private readonly IScreenShotService _screenShotService;
         private readonly ICaptureService _сaptureService;
 
-        public QueueService(MongoRepository repository, CasperJsService casperJsService, ICaptureService сaptureService)
+        public QueueService(MongoRepository repository, IScreenShotService screenShotService, ICaptureService сaptureService)
         {
             _factory = new ConnectionFactory() {HostName = ConfigurationManager.AppSettings["RabbitMQ.Host"]};
             _queueName = ConfigurationManager.AppSettings["RabbitMQ.QueueName"];
             _repository = repository;
-            _casperJsService = casperJsService;
+            _screenShotService = screenShotService;
             _сaptureService = сaptureService;
         }
 
@@ -55,7 +55,7 @@ namespace CapturesQueue.Services
                             Console.WriteLine(" [x] Received {0}", message);
                             try
                             {
-                                var bytes = _casperJsService.GetScreenBytesByUrl(message);
+                                var bytes = _screenShotService.GetScreenBytesByUrl(message);
                                 var linkToScreen = _сaptureService.UploadScreenShot(bytes);
                                 _repository.Create(message, linkToScreen);
                                 Console.WriteLine("Screenshot done.");
