@@ -13,7 +13,7 @@ namespace CapturesQueue
         public override void Load()
         {
             Bind<ICaptureService>().To<CaptureService>();
-            Bind<IScreenShotService>().To<PhantomJsCloudService>();
+            Bind<IScreenShotService>().To<CasperJsService>();
             Bind<MongoRepository>().To<MongoRepository>();
             Bind<IQueueService>().To<QueueService>();
         }

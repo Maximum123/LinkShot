@@ -6,7 +6,7 @@ using CapturesQueue.Helpers;
 
 namespace CapturesQueue.Services
 {
-    public class CasperJsService
+    public class CasperJsService : IScreenShotService
     {
         private readonly CasperJsHelper.CasperJsHelper _cjs;
         private readonly string _pathToJsFile;
