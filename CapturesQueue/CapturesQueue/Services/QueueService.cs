@@ -11,7 +11,7 @@ using RabbitMQ.Client.Events;
 
 namespace CapturesQueue.Services
 {
-    public class QueueService : IQueueService
+    public class QueueService : IQueueService, IDisposable
     {
         private readonly ConnectionFactory _factory;
         private readonly string _queueName;
@@ -27,6 +27,12 @@ namespace CapturesQueue.Services
             _repository = repository;
             _screenShotService = screenShotService;
             _сaptureService = сaptureService;
+        }
+
+        public void Dispose()
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
 
         public void Receive()
