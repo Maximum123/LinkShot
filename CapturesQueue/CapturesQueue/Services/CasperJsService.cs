@@ -37,7 +37,20 @@ namespace CapturesQueue.Services
 
         public CasperJsHelper.CasperJsHelper GetInstance()
         {
-            return new CasperJsHelper.CasperJsHelper(@"..\..\casperjs-1.1.3");
+            var casper = new CasperJsHelper.CasperJsHelper(@"..\..\casperjs-1.1.3");
+            casper.ErrorReceived += Casper_ErrorReceived;
+            casper.OutputReceived += Casper_OutputReceived;
+            return casper;
+        }
+
+        private void Casper_OutputReceived(object sender, System.Diagnostics.DataReceivedEventArgs e)
+        {
+            Console.WriteLine($"CasperJS Log: {e.Data}");
+        }
+
+        private void Casper_ErrorReceived(object sender, System.Diagnostics.DataReceivedEventArgs e)
+        {
+            Console.WriteLine($"CasperJS Error: {e.Data}");
         }
     }
 }
