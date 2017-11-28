@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Web;
+using LinkShort.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using RabbitMQ.Client;
@@ -32,33 +33,50 @@ namespace LinkShort.Services
             model.ConfirmSelect();
         }
 
-        public string AddToQueue(string link)
+        public LinkModel AddToQueue(string link)
         {
-            var result = GetLinkToScreen(link);
-            if (!string.IsNullOrEmpty(result))
+            var screenUrl = GetLinkToScreen(link);
+            if (!string.IsNullOrEmpty(screenUrl))
             {
-                return result;
+                return FillLinkModel(link, screenUrl, Status.Ready);
             }
-
-            var body = Encoding.UTF8.GetBytes(link);
-            IBasicProperties bp = model.CreateBasicProperties();
-            bp.DeliveryMode = 2;
-
-            model.BasicPublish(exchange: "",
-                routingKey: "linkShots",
-                basicProperties: bp,
-                body: body);
-
-            for (var i = 0; i < 15; i++)
+            try
             {
-                Thread.Sleep(1000);
-                result = GetLinkToScreen(link);
-                if (!string.IsNullOrEmpty(result))
+                var body = Encoding.UTF8.GetBytes(link);
+                IBasicProperties bp = model.CreateBasicProperties();
+                bp.DeliveryMode = 2;
+
+                model.BasicPublish(exchange: "",
+                    routingKey: "linkShots",
+                    basicProperties: bp,
+                    body: body);
+
+                for (var i = 0; i < 15; i++)
                 {
-                    return result;
+                    Thread.Sleep(1000);
+                    screenUrl = GetLinkToScreen(link);
+                    if (!string.IsNullOrEmpty(screenUrl))
+                    {
+                        return FillLinkModel(link, screenUrl, Status.Ready);
+                    }
                 }
             }
-            return "Not Found";
+            catch (Exception ex)
+            {
+                FillLinkModel(link, screenUrl, Status.Failed);
+            }
+            return FillLinkModel(link, screenUrl, Status.InProgress);
+        }
+
+        private LinkModel FillLinkModel(string url, string screenUrl, Status status)
+        {
+            var result = new LinkModel
+            {
+                Url = url,
+                Status = status,
+                ImageUrl = screenUrl
+            };
+            return result;
         }
 
         private static string GetLinkToScreen(string link)

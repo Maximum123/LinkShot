@@ -11,6 +11,7 @@ using System.Web.Helpers;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Mvc;
+using LinkShort.Models;
 
 namespace LinkShort.Controllers
 {
@@ -30,11 +31,20 @@ namespace LinkShort.Controllers
             //result.Content.Headers.ContentType =
             //    new MediaTypeHeaderValue("application/octet-stream");
             //return result;
-            return new  
+            return linkToShot;
+        }
+
+     //   [System.Web.Http.HttpPost]
+        public object Post([FromUri]string[] links)
+        {
+            var queue = new QueueService();
+            var result = new List<LinkModel>();
+            foreach (var link in links)
             {
-                Url = link,
-                ImageUrl = linkToShot
-            };
+                result.Add(queue.AddToQueue(link));
+            }
+
+            return result;
         }
 
         // GET api/<controller>/5
@@ -42,11 +52,10 @@ namespace LinkShort.Controllers
         {
             return "value";
         }
-
         // POST api/<controller>
-        public void Post([FromBody]string value)
-        {
-        }
+        //public void Post([FromBody]string value)
+        //{
+        //}
 
         // PUT api/<controller>/5
         public void Put(int id, [FromBody]string value)
