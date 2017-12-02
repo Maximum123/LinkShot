@@ -12,6 +12,8 @@ using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Mvc;
 using LinkShort.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace LinkShort.Controllers
 {
@@ -35,16 +37,28 @@ namespace LinkShort.Controllers
         }
 
      //   [System.Web.Http.HttpPost]
-        public object Post([FromUri]string[] links)
+        public object Post([FromBody]string[] links)
         {
+            
             var queue = new QueueService();
             var result = new List<LinkModel>();
             foreach (var link in links)
             {
+                if (!link.Contains("http:") && !link.Contains("https:"))
+                {
+                    continue;
+                }
                 result.Add(queue.AddToQueue(link));
             }
 
-            return result;
+            JsonConvert.DefaultSettings = (() =>
+            {
+                var settings = new JsonSerializerSettings();
+                settings.Converters.Add(new StringEnumConverter { CamelCaseText = true });
+                return settings;
+            });
+            var converted = JsonConvert.SerializeObject(result);
+            return converted;
         }
 
         // GET api/<controller>/5
