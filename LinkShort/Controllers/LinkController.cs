@@ -21,7 +21,7 @@ namespace LinkShort.Controllers
     public class LinkController : ApiController
     {
         // GET api/<controller>
-        public object Get(string link)
+        public object Get(string link)   
         {
             var queue = new QueueService(); 
             var linkToShot = queue.AddToQueue(link);
