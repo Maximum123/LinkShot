@@ -48,41 +48,45 @@ namespace CapturesQueue.Services
 
                 //channel.ConfirmSelect();
 
+                Semaphore semaphore = new Semaphore(5, 5);
                 var consumer = new EventingBasicConsumer(channel);
-                Semaphore semaphore = new Semaphore(10, 10);
                 consumer.Received += (model, ea) =>
                 {
-
-                    Task task = Task.Run(() =>
-                        {
-                            semaphore.WaitOne();
-                            var body = ea.Body;
-                            var message = Encoding.UTF8.GetString(body);
-                            Console.WriteLine(" [x] Received {0}", message);
-                            try
-                            {
-                                var bytes = _screenShotService.GetScreenBytesByUrl(message);
-                                var linkToScreen = _сaptureService.UploadScreenShot(bytes);
-                                _repository.Create(message, linkToScreen);
-                                Console.WriteLine("Screenshot done.");
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine("Exeption is " + ex);
-                            }
-                            channel.BasicAck(ea.DeliveryTag, false);
-                            semaphore.Release();
-                        }
-                    );
-
+                    semaphore.WaitOne();
+                    Task task = new Task(() =>
+                    {
+                        var body = ea.Body;
+                        var message = Encoding.UTF8.GetString(body);
+                        HandleMessage(message, channel);
+                        channel.BasicAck(ea.DeliveryTag, false);
+                        semaphore.Release();
+                    });  
+                    task.Start();
                 };
+
                 channel.BasicConsume(queue: "linkShots",
-                    autoAck: false,
-                    consumer: consumer);
+                autoAck: false,
+                consumer: consumer);
 
                 Console.WriteLine(" Press [enter] to exit.");
                 Console.ReadLine();
 
+            }
+        }
+
+        private void HandleMessage(string message, IModel channel)
+        {
+            Console.WriteLine(" [x] Received {0}", message);
+            try
+            {
+                var bytes = _screenShotService.GetScreenBytesByUrl(message);
+                var linkToScreen = _сaptureService.UploadScreenShot(bytes);
+                _repository.Create(message, linkToScreen);
+                Console.WriteLine("Screenshot done.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exeption is " + ex);
             }
         }
     }
