@@ -35,10 +35,11 @@ namespace LinkShort.Services
 
         public LinkModel AddToQueue(string link)
         {
-            var screenUrl = GetLinkToScreen(link);
+            string status;
+            var screenUrl = GetLinkToScreen(link, out status);
             if (!string.IsNullOrEmpty(screenUrl))
             {
-                return FillLinkModel(link, screenUrl, Status.Ready);
+                return FillLinkModel(link, screenUrl, status);
             }
             try
             {
@@ -53,22 +54,21 @@ namespace LinkShort.Services
 
                 for (var i = 0; i < 15; i++)
                 {
-                    Thread.Sleep(1000);
-                    screenUrl = GetLinkToScreen(link);
+                    screenUrl = GetLinkToScreen(link, out status);
                     if (!string.IsNullOrEmpty(screenUrl))
                     {
-                        return FillLinkModel(link, screenUrl, Status.Ready);
+                        return FillLinkModel(link, screenUrl, status);
                     }
                 }
             }
             catch (Exception ex)
             {
-                FillLinkModel(link, screenUrl, Status.Failed);
+                FillLinkModel(link, screenUrl, Status.Failed.ToString());
             }
-            return FillLinkModel(link, screenUrl, Status.InProgress);
+            return FillLinkModel(link, screenUrl, Status.InProgress.ToString());
         }
 
-        private LinkModel FillLinkModel(string url, string screenUrl, Status status)
+        private LinkModel FillLinkModel(string url, string screenUrl, string status)
         {
             var result = new LinkModel
             {
@@ -79,12 +79,17 @@ namespace LinkShort.Services
             return result;
         }
 
-        private static string GetLinkToScreen(string link)
+        private static string GetLinkToScreen(string link, out string status)
         {
             var filter = Builders<BsonDocument>.Filter.Eq("Url", link);
             var document = _collection.Find(filter).FirstOrDefault();
+            status = Status.InProgress.ToString();
             if (document != null)
             {
+                BsonValue linkStatus;
+                document.TryGetValue("Status", out  linkStatus);
+                status = linkStatus != null && !string.IsNullOrEmpty(linkStatus.ToString()) ? linkStatus?.ToString() : Status.Ready.ToString() ;
+
                 return document["LinkToScreen"].AsString;
             }
             return string.Empty;

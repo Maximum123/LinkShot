@@ -51,14 +51,14 @@ namespace LinkShort.Controllers
                 result.Add(queue.AddToQueue(link));
             }
 
-            JsonConvert.DefaultSettings = (() =>
-            {
-                var settings = new JsonSerializerSettings();
-                settings.Converters.Add(new StringEnumConverter { CamelCaseText = true });
-                return settings;
-            });
-            var converted = JsonConvert.SerializeObject(result);
-            return converted;
+            //JsonConvert.DefaultSettings = (() =>
+            //{
+            //    var settings = new JsonSerializerSettings();
+            //    settings.Converters.Add(new StringEnumConverter { CamelCaseText = true });
+            //    return settings;
+            //});
+            //var converted = JsonConvert.SerializeObject(result);
+            return result;
         }
 
         // GET api/<controller>/5

@@ -7,7 +7,7 @@ namespace LinkShort.Models
     public class LinkModel
     {
         public string Url { get; set; }
-        public Status Status { get; set; }
+        public string Status { get; set; }
         public string ImageUrl{ get; set; }
     }
 

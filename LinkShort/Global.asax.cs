@@ -27,8 +27,8 @@ namespace LinkShort
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             HttpConfiguration config = GlobalConfiguration.Configuration;
-            config.Formatters.JsonFormatter.SerializerSettings.Converters.Add
-                (new Newtonsoft.Json.Converters.StringEnumConverter());
+            //config.Formatters.JsonFormatter.SerializerSettings.Converters.Add
+            //    (new Newtonsoft.Json.Converters.StringEnumConverter());
             // DeclareToQueue();
         }
 

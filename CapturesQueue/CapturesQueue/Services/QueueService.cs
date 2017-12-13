@@ -86,6 +86,7 @@ namespace CapturesQueue.Services
             }
             catch (Exception ex)
             {
+                _repository.Create(message, "", true);
                 Console.WriteLine("Exeption is " + ex);
             }
         }
